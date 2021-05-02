@@ -1,0 +1,106 @@
+dist: trusty
+language: php
+services:
+  - mysql
+
+php:
+  - '7.4'
+
+env:
+  global:
+    - HORA=$(date +"%Y%m%d%H%M%S")
+
+# safelist
+branches:
+  only:
+  - master
+
+stages:
+  #- name: Code Quality
+  #  if: type = pull_request
+  - name: Unit Test
+  #  if: type = pull_request
+  #- name: Integration Test
+  #  if: type = pull_request
+  #- name: Run Build and Deploy to Staging Server
+  #  if: branch = development AND type != pull_request
+  #- name: Run Build and Deploy to Prod Server
+  #  if: branch = master AND type != pull_request
+
+before_script:
+  - .travis/before_script.sh
+
+script: skip
+
+#before_deploy:
+#  - mkdir -p /tmp/dpl_cd_upload
+#  - zip -r /tmp/dpl_cd_upload/latest.zip .
+
+jobs:
+  include:
+    #- stage: Code Quality
+    #  php: '7.1'
+    #  env: TEST_SUITE=Code Quality
+    #  before_script: .travis/before_script.sh
+    #  script: vendor/bin/phpcs .
+    - stage: Unit Test
+      php: '7.4'
+      env: TEST_SUITE=Unit Test
+      before_script: .travis/before_script.sh
+      script: vendor/bin/phpunit
+    #- stage: Integration Test
+    #  php: '7.1'
+    #  env: TEST_SUITE=Integration Test
+    #  before_script: .travis/before_script.sh
+    #  script: vendor/bin/phpunit --testsuite "Feature Tests"
+    #- stage: Run Build and Deploy to Staging Server
+    #  deploy:
+    #    -   provider: s3
+    #        access_key_id: "$AWS_ACCESS_KEY_ID"
+    #        secret_access_key: "$AWS_SECRET_ACCESS_KEY"
+    #        local_dir: /tmp/dpl_cd_upload
+    #        bucket: backoffice-backend-staging
+    #        skip_cleanup: true
+    #        upload-dir: travis-builds
+    #       on:
+    #          branch: development
+    #    -   provider: codedeploy
+    #        access_key_id: "$AWS_ACCESS_KEY_ID"
+    #        secret_access_key: "$AWS_SECRET_ACCESS_KEY"
+    #        bucket: backoffice-backend-staging
+    #        key: travis-builds/latest.zip
+    #        bundle_type: zip
+    #        application: backoffice-backend
+    #        deployment_group: backoffice-backend-staging
+    #        wait_until_deployed: true
+    #        on:
+    #          branch: development
+    #- stage: Run Build and Deploy to Prod Server
+    #  deploy:
+    #    -   provider: s3
+    #        access_key_id: "$AWS_ACCESS_KEY_ID"
+    #        secret_access_key: "$AWS_SECRET_ACCESS_KEY"
+    #        local_dir: /tmp/dpl_cd_upload
+    #        bucket: backoffice-backend-production
+    #        skip_cleanup: true
+    #        upload-dir: travis-builds
+    #        on:
+    #          branch: master
+    #    -   provider: codedeploy
+    #        access_key_id: "$AWS_ACCESS_KEY_ID"
+    #        secret_access_key: "$AWS_SECRET_ACCESS_KEY"
+    #        bucket: backoffice-backend-production
+    #        key: travis-builds/latest.zip
+    #        bundle_type: zip
+    #        application: backoffice-backend
+    #        deployment_group: backoffice-backend-production
+    #        wait_until_deployed: true
+    #        on:
+    #          branch: master
+
+#notifications:
+#  email: false
+#  slack:
+#    rooms:
+#      - nuboxhq:0VAr91t4BxI8zsF7Exktu6fI#colppymasgen
+#      - nuboxhq:0VAr91t4BxI8zsF7Exktu6fI#colppy-dev
