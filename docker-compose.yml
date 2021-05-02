@@ -1,0 +1,56 @@
+version: "3.4"
+
+# NETWORK #
+networks:
+  default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+
+# VOLUMES #
+volumes:
+  composer-cache-7.4:
+    driver: local
+  mysql:
+    driver: local
+# ----------------------------- #
+
+services:
+  # MySQL #
+  mysql:
+    image: mysql:5.6
+    restart: always
+    environment: 
+      MYSQL_ROOT_PASSWORD: secret
+    networks: 
+      default:
+        ipv4_address: 172.20.0.200
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql:/var/lib/mysql
+  # JPM #
+  jpm2:
+    build:
+      context: ../jpm2/
+      dockerfile: ./Dockerfile
+    restart: always
+    networks:
+      default:
+        ipv4_address: 172.20.0.30
+        aliases:
+          - local.jpm2.com
+    expose:
+      - 80
+      - 443
+    environment:
+      - WEB_DOCUMENT_ROOT=/var/www/html/public
+      - WEB_ALIAS_DOMAIN=local.jpm2.com
+      - XDEBUG_REMOTE_AUTOSTART=1
+    volumes:
+      - ../jpm2/:/var/www/html/
+      - ../jpm2/certificates/:/opt/docker/etc/nginx/ssl/
+      - composer-cache-7.4:/root/.composer/
+
