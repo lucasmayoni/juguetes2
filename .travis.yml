@@ -31,8 +31,6 @@ stages:
 before_script:
   - .travis/before_script.sh
 
-script:
-  - coveralls
 
 #before_deploy:
 #  - mkdir -p /tmp/dpl_cd_upload
@@ -100,10 +98,3 @@ jobs:
     #        wait_until_deployed: true
     #        on:
     #          branch: master
-
-#notifications:
-#  email: false
-#  slack:
-#    rooms:
-#      - nuboxhq:0VAr91t4BxI8zsF7Exktu6fI#colppymasgen
-#      - nuboxhq:0VAr91t4BxI8zsF7Exktu6fI#colppy-dev
