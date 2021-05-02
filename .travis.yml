@@ -31,7 +31,8 @@ stages:
 before_script:
   - .travis/before_script.sh
 
-script: skip
+script:
+  - coveralls
 
 #before_deploy:
 #  - mkdir -p /tmp/dpl_cd_upload
