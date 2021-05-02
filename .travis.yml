@@ -47,9 +47,9 @@ jobs:
     #  script: vendor/bin/phpcs .
     - stage: Unit Test
       php: '7.4'
-      env: TEST_SUITE=Unit Test CODECOV_TOKEN='db25160f-c851-4f05-b72b-132f4fee7b72'
+      env: TEST_SUITE=Unit Test
       before_script: .travis/before_script.sh
-      script: vendor/bin/phpunit
+      script: vendor/bin/phpunit --coverage-clover coverage.xml
       after_success: bash <(curl -s https://codecov.io/bash)
     #- stage: Integration Test
     #  php: '7.1'
